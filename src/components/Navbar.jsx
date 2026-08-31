@@ -2,7 +2,14 @@ import { useState } from "react";
 
 function Navbar() {
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+const toggleTheme = () => {
+  setDarkMode(!darkMode);
+  document.body.classList.toggle("dark-mode");
+};
+
 
   const scrollToSection = (sectionId) => {
 
@@ -13,14 +20,8 @@ function Navbar() {
         block: "start",
       });
 
-  };
-
-
-  const toggleTheme = () => {
-
-    setDarkMode(!darkMode);
-
-    document.body.classList.toggle("dark-mode");
+    // Mobile menu close
+    setMenuOpen(false);
 
   };
 
@@ -31,130 +32,135 @@ function Navbar() {
 
       {/* ================= LOGO ================= */}
 
-      <div className="logo">
+      <div
+        className="logo"
+        onClick={() => scrollToSection("home")}
+      >
 
-        <div className="logo-icon">
-          🏛️
-        </div>
+        <i className="fa-solid fa-building-columns"></i>
 
         <div>
 
-          <h2>
-            Seva Kendra
-          </h2>
+          <h2>Seva Kendra</h2>
 
-          <p>
-            Government Service Portal
-          </p>
+          <p>Government Service Portal</p>
 
         </div>
 
       </div>
 
 
-      {/* ================= NAV LINKS ================= */}
+      {/* ================= DESKTOP NAV ================= */}
 
-      <nav className="nav-links">
+      <ul
+        className={`nav-links ${
+          menuOpen ? "mobile-open" : ""
+        }`}
+      >
 
-        <button
-          onClick={() =>
-            scrollToSection("home")
-          }
-        >
-          🏠 Home
-        </button>
+        <li>
+          <button
+            onClick={() => scrollToSection("home")}
+          >
+            Home
+          </button>
+        </li>
 
+        <li>
+          <button
+            onClick={() => scrollToSection("services")}
+          >
+            Services
+          </button>
+        </li>
 
-        <button
-          onClick={() =>
-            scrollToSection("apply")
-          }
-        >
-          📝 Apply
-        </button>
+        <li>
+          <button
+            onClick={() => scrollToSection("apply")}
+          >
+            Apply
+          </button>
+        </li>
 
+        <li>
+          <button
+            onClick={() => scrollToSection("track")}
+          >
+            Track
+          </button>
+        </li>
 
-        <button
-          onClick={() =>
-            scrollToSection("track")
-          }
-        >
-          🔍 Track
-        </button>
+        <li>
+          <button
+            onClick={() => scrollToSection("dashboard")}
+          >
+            Dashboard
+          </button>
+        </li>
 
+        <li>
+          <button
+            onClick={() => scrollToSection("admin")}
+          >
+            Admin
+          </button>
+        </li>
 
-        <button
-          onClick={() =>
-            scrollToSection("dashboard")
-          }
-        >
-          📊 Dashboard
-        </button>
-
-
-        <button
-          onClick={() =>
-            scrollToSection("admin")
-          }
-        >
-          👨‍💼 Admin
-        </button>
-
-      </nav>
+      </ul>
 
 
       {/* ================= RIGHT SIDE ================= */}
 
       <div className="nav-right">
+         <button
+  className="theme-btn"
+  title="Toggle Theme"
+  onClick={toggleTheme}
+>
+  <i
+    className={
+      darkMode
+        ? "fa-solid fa-sun"
+        : "fa-solid fa-moon"
+    }
+  ></i>
+</button>
+        
 
-        {/* Theme */}
 
         <button
-          className="nav-icon"
-          onClick={toggleTheme}
-          title="Change Theme"
-        >
-          {darkMode ? "☀️" : "🌙"}
-        </button>
-
-
-        {/* Notification */}
-
-        <button
-          className="nav-icon notification-icon"
+          className="notification-btn"
           title="Notifications"
         >
+          <i className="fa-solid fa-bell"></i>
 
-          🔔
-
-          <span className="notification-badge">
+          <span className="badge">
             3
           </span>
 
         </button>
 
 
-        {/* Profile */}
+        {/* ================= HAMBURGER ================= */}
 
-        <div className="profile">
+        <button
+          className="menu-btn"
+          onClick={() =>
+            setMenuOpen(!menuOpen)
+          }
+          aria-label="Toggle menu"
+        >
 
-          <div className="profile-avatar">
-            SK
-          </div>
+          <i
+            className={
+              menuOpen
+                ? "fa-solid fa-xmark"
+                : "fa-solid fa-bars"
+            }
+          ></i>
 
-          <div className="profile-info">
-
-            <strong>
-              Sidhant
-            </strong>
-
-            <span>
-              Citizen
-            </span>
-
-          </div>
-
-        </div>
+        </button>
+       
 
       </div>
 

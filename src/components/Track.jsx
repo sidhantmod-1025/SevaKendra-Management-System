@@ -7,30 +7,37 @@ function Track() {
   const [error, setError] = useState("");
 
 
+  // =========================
+  // TRACK APPLICATION
+  // =========================
+
   const handleTrack = (e) => {
 
     e.preventDefault();
 
     const searchToken = token.trim().toUpperCase();
 
+
     if (!searchToken) {
-      setError("Please enter your token number.");
+
+      setError("Please enter your application token number.");
+
       setApplication(null);
+
       return;
     }
 
 
-    // Get applications from localStorage
     const applications =
       JSON.parse(
         localStorage.getItem("sevaApplications")
       ) || [];
 
 
-    // Find application
     const foundApplication =
       applications.find(
         (app) =>
+          app.token &&
           app.token.toUpperCase() === searchToken
       );
 
@@ -46,13 +53,17 @@ function Track() {
       setApplication(null);
 
       setError(
-        "Application not found. Please check your token number."
+        "Application not found. Please check your token number and try again."
       );
 
     }
 
   };
 
+
+  // =========================
+  // CLEAR SEARCH
+  // =========================
 
   const clearSearch = () => {
 
@@ -65,6 +76,20 @@ function Track() {
   };
 
 
+  // =========================
+  // STATUS CLASS
+  // =========================
+
+  const getStatusClass = () => {
+
+    if (!application) return "";
+
+    return application.status
+      .toLowerCase();
+
+  };
+
+
   return (
 
     <section
@@ -72,11 +97,12 @@ function Track() {
       className="section track-section"
     >
 
+
       {/* ================= TITLE ================= */}
 
       <div className="section-title">
 
-        <span>
+        <span className="section-label">
           APPLICATION TRACKING
         </span>
 
@@ -85,48 +111,89 @@ function Track() {
         </h2>
 
         <p>
-          Enter your token number to check your
-          application status.
+          Enter your application token number
+          to view the latest status.
         </p>
 
       </div>
 
 
-      {/* ================= SEARCH ================= */}
 
-      <form
-        className="track-form"
-        onSubmit={handleTrack}
-      >
+      {/* ================= SEARCH CARD ================= */}
 
-        <input
-          className="token"
-          type="text "
-          value={token}
-          onChange={(e) =>
-            setToken(e.target.value)
-          }
-          placeholder="Enter Token Number e.g. SK-0001"
-        />
-<br></br>
-<br></br>
-        <button
-          type="submit"
-          className="primary-btn"
-        >
-          🔍 Track Status
-        </button>
+      <div className="track-search-card">
+
+        <div className="track-search-icon">
+
+          <i className="fa-solid fa-magnifying-glass"></i>
+
+        </div>
 
 
-        <button
-          type="button"
-          className="secondary-btn clear"
-          onClick={clearSearch}
-        >
-          Clear
-        </button>
+        <div className="track-search-content">
 
-      </form>
+          <h3>
+            Check Application Status
+          </h3>
+
+          <p>
+            Enter the token number received after
+            submitting your application.
+          </p>
+
+
+          <form
+            className="track-form"
+            onSubmit={handleTrack}
+          >
+
+            <div className="track-input-wrapper">
+
+              <i className="fa-solid fa-ticket"></i>
+
+              <input
+                className="token"
+                type="text"
+                value={token}
+                onChange={(e) =>
+                  setToken(e.target.value)
+                }
+                placeholder="Enter token e.g. SK-0001"
+              />
+
+            </div>
+
+
+            <button
+              type="submit"
+              className="primary-btn track-btn"
+            >
+
+              <i className="fa-solid fa-magnifying-glass"></i>
+
+              Track Status
+
+            </button>
+
+
+            <button
+              type="button"
+              className="secondary-btn clear"
+              onClick={clearSearch}
+            >
+
+              <i className="fa-solid fa-rotate-left"></i>
+
+              Clear
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
 
 
       {/* ================= ERROR ================= */}
@@ -135,11 +202,16 @@ function Track() {
 
         <div className="track-error">
 
-          ⚠️ {error}
+          <i className="fa-solid fa-circle-exclamation"></i>
+
+          <span>
+            {error}
+          </span>
 
         </div>
 
       )}
+
 
 
       {/* ================= RESULT ================= */}
@@ -148,12 +220,15 @@ function Track() {
 
         <div className="track-result">
 
+
+          {/* RESULT HEADER */}
+
           <div className="track-header">
 
-            <div>
+            <div className="track-token-info">
 
               <span>
-                Application Token
+                APPLICATION TOKEN
               </span>
 
               <h2>
@@ -164,181 +239,331 @@ function Track() {
 
 
             <span
-              className={`status-badge ${
-                application.status
-                  .toLowerCase()
-              }`}
+              className={`status-badge ${getStatusClass()}`}
             >
+
+              <i
+                className={
+                  application.status === "Approved"
+                    ? "fa-solid fa-circle-check"
+                    : application.status === "Rejected"
+                    ? "fa-solid fa-circle-xmark"
+                    : "fa-solid fa-clock"
+                }
+              ></i>
+
               {application.status}
+
             </span>
 
           </div>
 
 
-          {/* Application Information */}
+
+          {/* DIVIDER */}
+
+          <div className="track-divider"></div>
+
+
+
+          {/* APPLICATION INFORMATION */}
 
           <div className="track-info">
 
+
             <div className="info-item">
 
-              <span>
-                Applicant Name
-              </span>
+              <div className="info-icon">
 
-              <strong>
-                {application.name}
-              </strong>
+                <i className="fa-solid fa-user"></i>
+
+              </div>
+
+              <div>
+
+                <span>
+                  Applicant Name
+                </span>
+
+                <strong>
+                  {application.name}
+                </strong>
+
+              </div>
 
             </div>
 
 
+
             <div className="info-item">
 
-              <span>
-                Service
-              </span>
+              <div className="info-icon">
 
-              <strong>
-                {application.service}
-              </strong>
+                <i className="fa-solid fa-building-columns"></i>
+
+              </div>
+
+              <div>
+
+                <span>
+                  Service
+                </span>
+
+                <strong>
+                  {application.service}
+                </strong>
+
+              </div>
 
             </div>
 
 
+
             <div className="info-item">
 
-              <span>
-                Mobile Number
-              </span>
+              <div className="info-icon">
 
-              <strong>
-                {application.mobile}
-              </strong>
+                <i className="fa-solid fa-phone"></i>
+
+              </div>
+
+              <div>
+
+                <span>
+                  Mobile Number
+                </span>
+
+                <strong>
+                  {application.mobile}
+                </strong>
+
+              </div>
 
             </div>
 
 
+
             <div className="info-item">
 
-              <span>
-                Application Date
-              </span>
+              <div className="info-icon">
 
-              <strong>
-                {application.date}
-              </strong>
+                <i className="fa-solid fa-calendar"></i>
+
+              </div>
+
+              <div>
+
+                <span>
+                  Application Date
+                </span>
+
+                <strong>
+                  {application.date}
+                </strong>
+
+              </div>
 
             </div>
 
           </div>
+
 
 
           {/* ================= PROGRESS ================= */}
 
-          <div className="application-progress">
+          <div className="progress-container">
 
-            <div className="progress-step completed">
+            <div className="progress-title">
 
-              <div className="step-circle">
-                ✓
-              </div>
+              <h3>
+                Application Progress
+              </h3>
 
               <span>
-                Submitted
+                {application.status}
               </span>
 
             </div>
 
 
-            <div
-              className={
-                application.status === "Pending"
-                  ? "progress-line"
-                  : "progress-line completed-line"
-              }
-            ></div>
+            <div className="application-progress">
 
 
-            <div
-              className={
-                application.status === "Pending"
-                  ? "progress-step active"
-                  : "progress-step completed"
-              }
-            >
+              {/* SUBMITTED */}
 
-              <div className="step-circle">
+              <div className="progress-step completed">
 
-                {application.status === "Pending"
-                  ? "2"
-                  : "✓"}
+                <div className="step-circle">
+
+                  <i className="fa-solid fa-check"></i>
+
+                </div>
+
+                <span>
+                  Submitted
+                </span>
 
               </div>
 
-              <span>
-                Under Review
-              </span>
 
-            </div>
+              <div
+                className={
+                  application.status === "Pending"
+                    ? "progress-line"
+                    : "progress-line completed-line"
+                }
+              ></div>
 
 
-            <div className="progress-line"></div>
 
+              {/* UNDER REVIEW */}
 
-            <div
-              className={
-                application.status === "Approved"
-                  ? "progress-step completed"
-                  : "progress-step"
-              }
-            >
+              <div
+                className={
+                  application.status === "Pending"
+                    ? "progress-step active"
+                    : application.status === "Approved"
+                    ? "progress-step completed"
+                    : "progress-step"
+                }
+              >
 
-              <div className="step-circle">
+                <div className="step-circle">
 
-                {application.status === "Approved"
-                  ? "✓"
-                  : "3"}
+                  {application.status === "Pending" ? (
+                    <i className="fa-solid fa-clock"></i>
+                  ) : application.status === "Approved" ? (
+                    <i className="fa-solid fa-check"></i>
+                  ) : (
+                    "2"
+                  )}
+
+                </div>
+
+                <span>
+                  Under Review
+                </span>
 
               </div>
 
-              <span>
-                Approved
-              </span>
+
+              <div
+                className={
+                  application.status === "Approved"
+                    ? "progress-line completed-line"
+                    : "progress-line"
+                }
+              ></div>
+
+
+
+              {/* APPROVED */}
+
+              <div
+                className={
+                  application.status === "Approved"
+                    ? "progress-step completed"
+                    : "progress-step"
+                }
+              >
+
+                <div className="step-circle">
+
+                  {application.status === "Approved" ? (
+                    <i className="fa-solid fa-check"></i>
+                  ) : (
+                    "3"
+                  )}
+
+                </div>
+
+                <span>
+                  Approved
+                </span>
+
+              </div>
 
             </div>
 
           </div>
 
 
+
           {/* ================= STATUS MESSAGE ================= */}
 
-          <div className="status-message">
+          <div
+            className={`status-message ${getStatusClass()}`}
+          >
 
             {application.status === "Pending" && (
 
               <>
-                ⏳ Your application is currently
-                under review.
+                <i className="fa-solid fa-clock"></i>
+
+                <div>
+
+                  <strong>
+                    Application Under Review
+                  </strong>
+
+                  <p>
+                    Your application has been received
+                    and is currently being reviewed by
+                    the concerned department.
+                  </p>
+
+                </div>
+
               </>
 
             )}
+
 
 
             {application.status === "Approved" && (
 
               <>
-                ✅ Your application has been
-                approved successfully.
+                <i className="fa-solid fa-circle-check"></i>
+
+                <div>
+
+                  <strong>
+                    Application Approved
+                  </strong>
+
+                  <p>
+                    Your application has been approved
+                    successfully. You can proceed with
+                    the next steps.
+                  </p>
+
+                </div>
+
               </>
 
             )}
 
 
+
             {application.status === "Rejected" && (
 
               <>
-                ❌ Your application has been rejected.
-                Please contact Seva Kendra.
+                <i className="fa-solid fa-circle-xmark"></i>
+
+                <div>
+
+                  <strong>
+                    Application Rejected
+                  </strong>
+
+                  <p>
+                    Your application has been rejected.
+                    Please contact your nearest Seva
+                    Kendra for more information.
+                  </p>
+
+                </div>
+
               </>
 
             )}
@@ -352,6 +577,7 @@ function Track() {
     </section>
 
   );
+
 }
 
 export default Track;

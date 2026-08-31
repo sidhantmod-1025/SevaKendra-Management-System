@@ -5,7 +5,10 @@ function Dashboard() {
   const [applications, setApplications] = useState([]);
 
 
-  // Load applications
+  // =========================
+  // LOAD APPLICATIONS
+  // =========================
+
   const loadApplications = () => {
 
     const savedApplications =
@@ -18,7 +21,10 @@ function Dashboard() {
   };
 
 
-  // First load
+  // =========================
+  // FIRST LOAD
+  // =========================
+
   useEffect(() => {
 
     loadApplications();
@@ -26,8 +32,12 @@ function Dashboard() {
   }, []);
 
 
-  // Calculate statistics
-  const totalApplications = applications.length;
+  // =========================
+  // STATISTICS
+  // =========================
+
+  const totalApplications =
+    applications.length;
 
   const approvedApplications =
     applications.filter(
@@ -52,12 +62,13 @@ function Dashboard() {
       className="section dashboard-section"
     >
 
+
       {/* ================= TITLE ================= */}
 
       <div className="section-title">
 
-        <span>
-          OVERVIEW
+        <span className="section-label">
+          APPLICATION OVERVIEW
         </span>
 
         <h2>
@@ -65,11 +76,12 @@ function Dashboard() {
         </h2>
 
         <p>
-          View application statistics and recent
-          citizen requests.
+          Monitor application statistics and
+          recently submitted citizen requests.
         </p>
 
       </div>
+
 
 
       {/* ================= STATISTICS ================= */}
@@ -81,8 +93,18 @@ function Dashboard() {
 
         <div className="dashboard-card total-card">
 
-          <div className="dashboard-icon">
-            📋
+          <div className="dashboard-card-top">
+
+            <div className="dashboard-icon">
+
+              <i className="fa-solid fa-file-lines"></i>
+
+            </div>
+
+            <span className="card-label">
+              ALL APPLICATIONS
+            </span>
+
           </div>
 
           <h2>
@@ -96,12 +118,23 @@ function Dashboard() {
         </div>
 
 
+
         {/* APPROVED */}
 
         <div className="dashboard-card approved-card">
 
-          <div className="dashboard-icon">
-            ✅
+          <div className="dashboard-card-top">
+
+            <div className="dashboard-icon">
+
+              <i className="fa-solid fa-circle-check"></i>
+
+            </div>
+
+            <span className="card-label">
+              COMPLETED
+            </span>
+
           </div>
 
           <h2>
@@ -109,18 +142,29 @@ function Dashboard() {
           </h2>
 
           <p>
-            Approved
+            Approved Applications
           </p>
 
         </div>
+
 
 
         {/* PENDING */}
 
         <div className="dashboard-card pending-card">
 
-          <div className="dashboard-icon">
-            ⏳
+          <div className="dashboard-card-top">
+
+            <div className="dashboard-icon">
+
+              <i className="fa-solid fa-clock"></i>
+
+            </div>
+
+            <span className="card-label">
+              IN PROGRESS
+            </span>
+
           </div>
 
           <h2>
@@ -128,18 +172,29 @@ function Dashboard() {
           </h2>
 
           <p>
-            Pending
+            Pending Applications
           </p>
 
         </div>
+
 
 
         {/* REJECTED */}
 
         <div className="dashboard-card rejected-card">
 
-          <div className="dashboard-icon">
-            ❌
+          <div className="dashboard-card-top">
+
+            <div className="dashboard-icon">
+
+              <i className="fa-solid fa-circle-xmark"></i>
+
+            </div>
+
+            <span className="card-label">
+              DECLINED
+            </span>
+
           </div>
 
           <h2>
@@ -147,7 +202,7 @@ function Dashboard() {
           </h2>
 
           <p>
-            Rejected
+            Rejected Applications
           </p>
 
         </div>
@@ -155,21 +210,36 @@ function Dashboard() {
       </div>
 
 
+
       {/* ================= RECENT APPLICATIONS ================= */}
 
       <div className="dashboard-table-container">
 
+
+        {/* TABLE HEADER */}
+
         <div className="table-heading">
 
-          <div>
+          <div className="table-heading-text">
 
-            <h2>
-              Recent Applications
-            </h2>
+            <div className="table-heading-icon">
 
-            <p>
-              Latest submitted applications
-            </p>
+              <i className="fa-solid fa-table-list"></i>
+
+            </div>
+
+            <div>
+
+              <h2>
+                Recent Applications
+              </h2>
+
+              <p>
+                Latest citizen applications submitted
+                through the portal.
+              </p>
+
+            </div>
 
           </div>
 
@@ -178,20 +248,27 @@ function Dashboard() {
             className="refresh-btn"
             onClick={loadApplications}
           >
-            🔄 Refresh
+
+            <i className="fa-solid fa-rotate"></i>
+
+            Refresh
+
           </button>
 
         </div>
 
 
-        {applications.length === 0 ? (
 
-          /* EMPTY STATE */
+        {/* ================= EMPTY STATE ================= */}
+
+        {applications.length === 0 ? (
 
           <div className="empty-dashboard">
 
-            <div>
-              📂
+            <div className="empty-icon">
+
+              <i className="fa-solid fa-folder-open"></i>
+
             </div>
 
             <h3>
@@ -207,7 +284,8 @@ function Dashboard() {
 
         ) : (
 
-          /* TABLE */
+
+          /* ================= TABLE ================= */
 
           <div className="table-wrapper">
 
@@ -218,23 +296,23 @@ function Dashboard() {
                 <tr>
 
                   <th>
-                    Token
+                    APPLICATION TOKEN
                   </th>
 
                   <th>
-                    Name
+                    APPLICANT
                   </th>
 
                   <th>
-                    Service
+                    SERVICE
                   </th>
 
                   <th>
-                    Date
+                    DATE
                   </th>
 
                   <th>
-                    Status
+                    STATUS
                   </th>
 
                 </tr>
@@ -252,37 +330,101 @@ function Dashboard() {
 
                     <tr key={application.id}>
 
+
+                      {/* TOKEN */}
+
                       <td>
 
-                        <strong>
+                        <span className="table-token">
+
+                          <i className="fa-solid fa-ticket"></i>
+
                           {application.token}
-                        </strong>
+
+                        </span>
 
                       </td>
 
+
+
+                      {/* NAME */}
 
                       <td>
-                        {application.name}
+
+                        <div className="applicant-cell">
+
+                          <div className="applicant-avatar">
+
+                            {application.name
+                              ?.charAt(0)
+                              .toUpperCase()}
+
+                          </div>
+
+                          <strong>
+                            {application.name}
+                          </strong>
+
+                        </div>
+
                       </td>
 
+
+
+                      {/* SERVICE */}
 
                       <td>
-                        {application.service}
+
+                        <span className="service-name">
+
+                          <i className="fa-solid fa-building-columns"></i>
+
+                          {application.service}
+
+                        </span>
+
                       </td>
 
+
+
+                      {/* DATE */}
 
                       <td>
-                        {application.date}
+
+                        <span className="date-cell">
+
+                          <i className="fa-regular fa-calendar"></i>
+
+                          {application.date}
+
+                        </span>
+
                       </td>
 
+
+
+                      {/* STATUS */}
 
                       <td>
 
                         <span
                           className={`status-badge ${
-                            application.status.toLowerCase()
+                            application.status
+                              ?.toLowerCase()
                           }`}
                         >
+
+                          {application.status === "Approved" && (
+                            <i className="fa-solid fa-check"></i>
+                          )}
+
+                          {application.status === "Pending" && (
+                            <i className="fa-solid fa-clock"></i>
+                          )}
+
+                          {application.status === "Rejected" && (
+                            <i className="fa-solid fa-xmark"></i>
+                          )}
 
                           {application.status}
 
@@ -307,6 +449,7 @@ function Dashboard() {
     </section>
 
   );
+
 }
 
 export default Dashboard;

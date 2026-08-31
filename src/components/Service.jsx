@@ -1,58 +1,97 @@
+import { useState } from "react";
+
 function Services() {
+
+  const [selectedService, setSelectedService] = useState(null);
 
   const services = [
     {
-      icon: "🪪",
+      icon: "fa-id-card",
       title: "Income Certificate",
+      code: "INC-001",
       description:
-        "Apply online for your income certificate quickly and easily.",
+        "Apply for an official income certificate required for various government schemes and services.",
     },
 
     {
-      icon: "🏠",
+      icon: "fa-house",
       title: "Residence Certificate",
+      code: "RES-002",
       description:
-        "Apply for residence verification and certificate services.",
+        "Apply for an official residence certificate to verify your residential address.",
     },
 
     {
-      icon: "👥",
+      icon: "fa-users",
       title: "Caste Certificate",
+      code: "CAS-003",
       description:
-        "Submit your caste certificate application online.",
+        "Submit your application for caste certificate and track its verification status.",
     },
 
     {
-      icon: "👶",
+      icon: "fa-baby",
       title: "Birth Certificate",
+      code: "BIR-004",
       description:
-        "Apply for birth certificate registration services.",
+        "Register and apply for an official birth certificate through the digital portal.",
     },
 
     {
-      icon: "📄",
+      icon: "fa-file-lines",
       title: "Death Certificate",
+      code: "DEA-005",
       description:
-        "Apply for death certificate and related services.",
+        "Apply for an official death certificate and manage the application online.",
     },
 
     {
-      icon: "🍚",
+      icon: "fa-credit-card",
       title: "Ration Card",
+      code: "RAT-006",
       description:
-        "Apply for ration card services through the portal.",
+        "Apply for ration card services and submit the required citizen documents.",
     },
   ];
 
 
-  const goToApply = () => {
+  // ===============================
+  // GO TO APPLY
+  // ===============================
 
-    document
-      .getElementById("apply")
-      ?.scrollIntoView({
+  const goToApply = (serviceName = "") => {
+
+    const applySection =
+      document.getElementById("apply");
+
+    if (applySection) {
+
+      applySection.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
+
+    }
+
+    // Service select ko automatically change karna
+    setTimeout(() => {
+
+      const serviceSelect =
+        document.getElementById("service");
+
+      if (serviceSelect && serviceName) {
+
+        serviceSelect.value = serviceName;
+
+        serviceSelect.dispatchEvent(
+          new Event("change", {
+            bubbles: true,
+          })
+        );
+
+      }
+
+    }, 500);
 
   };
 
@@ -64,64 +103,233 @@ function Services() {
       className="section services-section"
     >
 
-      {/* ================= TITLE ================= */}
+      {/* ================= HEADER ================= */}
 
-      <div className="section-title">
+      <div className="services-header">
 
-        <span>
-          OUR SERVICES
-        </span>
+        <div>
 
-        <h2>
-          Government Services
-        </h2>
+          <span className="section-label">
+            CITIZEN SERVICES
+          </span>
 
-        <p>
-          Access important citizen services from
-          one simple digital platform.
-        </p>
+          <h2>
+            Government Services
+          </h2>
+
+          <p className = "center">
+            Access essential government services
+            through our secure digital platform.
+          </p>
+
+        </div>
+
+
+        <div className="service-count">
+
+          <strong>
+            06
+          </strong>
+
+          <span>
+            Services Available
+          </span>
+
+        </div>
 
       </div>
 
 
-      {/* ================= SERVICE CARDS ================= */}
+      {/* ================= SERVICE GRID ================= */}
 
       <div className="service-grid">
 
-        {services.map((service) => (
+        {services.map((service, index) => (
 
           <div
             className="service-card"
-            key={service.title}
+            key={service.code}
           >
 
-            <div className="service-icon">
-              {service.icon}
+            {/* CARD TOP */}
+
+            <div className="service-card-top">
+
+              <div className="service-icon">
+
+                <i
+                  className={`fa-solid ${service.icon}`}
+                ></i>
+
+              </div>
+
+              <span className="service-number">
+                0{index + 1}
+              </span>
+
             </div>
 
 
-            <h3>
-              {service.title}
-            </h3>
+            {/* CONTENT */}
+
+            <div className="service-content">
+
+              <span className="service-code">
+                {service.code}
+              </span>
+
+              <h3>
+                {service.title}
+              </h3>
+
+              <p>
+                {service.description}
+              </p>
+
+            </div>
 
 
-            <p>
-              {service.description}
-            </p>
+            {/* ACTIONS */}
+
+            <div className="service-actions">
+
+              <button
+                className="details-btn"
+                onClick={() =>
+                  setSelectedService(service)
+                }
+              >
+                View Details
+              </button>
 
 
-            <button
-              className="service-btn"
-              onClick={goToApply}
-            >
-              Apply Now →
-            </button>
+              <button
+                className="service-btn"
+                onClick={() =>
+                  goToApply(service.title)
+                }
+              >
+                Apply Now
+
+                <i className="fa-solid fa-arrow-right"></i>
+
+              </button>
+
+            </div>
 
           </div>
 
         ))}
 
       </div>
+
+
+      {/* ================= MODAL ================= */}
+
+      {selectedService && (
+
+        <div
+          className="service-modal-overlay"
+          onClick={() => setSelectedService(null)}
+        >
+
+          <div
+            className="service-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            <button
+              className="modal-close"
+              onClick={() => setSelectedService(null)}
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+
+
+            <div className="modal-icon">
+
+              <i
+                className={`fa-solid ${selectedService.icon}`}
+              ></i>
+
+            </div>
+
+
+            <span className="service-code">
+              {selectedService.code}
+            </span>
+
+
+            <h2>
+              {selectedService.title}
+            </h2>
+
+
+            <p>
+              {selectedService.description}
+            </p>
+
+
+            <div className="modal-info">
+
+              <div>
+
+                <i className="fa-solid fa-check"></i>
+
+                <span>
+                  Online Application
+                </span>
+
+              </div>
+
+
+              <div>
+
+                <i className="fa-solid fa-check"></i>
+
+                <span>
+                  Application Tracking
+                </span>
+
+              </div>
+
+
+              <div>
+
+                <i className="fa-solid fa-check"></i>
+
+                <span>
+                  Digital Token Generation
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <button
+              className="primary-btn modal-apply-btn"
+              onClick={() => {
+
+                setSelectedService(null);
+
+                goToApply(
+                  selectedService.title
+                );
+
+              }}
+            >
+              Apply for this Service
+
+              <i className="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
 
     </section>
 
